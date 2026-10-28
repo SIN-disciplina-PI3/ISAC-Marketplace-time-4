@@ -1,0 +1,29 @@
+# Compilação e dependências
+target/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Ambiente
+.env
+*.env.local
+
+# SO
+.DS_Store
+Thumbs.db

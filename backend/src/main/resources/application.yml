@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: isac-marketplace
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+server:
+  port: 8080
+
+assinatura:
+  dias-ciclo: 15
+  cron: "0 0 3 * * ?"
+
+anuncio:
+  dias-expiracao: 15
+  dias-aviso-previo: 2
+  cron-expiracao: "0 0 2 * * ?"
+
+moderacao:
+  obrigatoria: false
+
+whatsapp:
+  evolution:
+    enabled: false
+    base-url: "${EVOLUTION_BASE_URL:http://localhost:8081}"
+    api-key: "${EVOLUTION_API_KEY:evolution-key-placeholder}"
+    instancia: "${EVOLUTION_INSTANCE:isac}"
+  webhook:
+    token: "${WHATSAPP_WEBHOOK_SECRET:isac-webhook-segredo-2026}"
+
+jwt:
+  secret: "${JWT_SECRET:isac-marketplace-super-secret-key-32-bytes-minimum-length-jwt-2026}"
+  expiration-ms: 86400000
+
+storage:
+  tipo: "${STORAGE_TYPE:local}"
+  local-dir: "${STORAGE_LOCAL_DIR:./uploads/anuncios}"
+  supabase:
+    url: "${SUPABASE_URL:https://xyz.supabase.co}"
+    key: "${SUPABASE_KEY:supabase-key-placeholder}"
+    bucket: "anuncios"
