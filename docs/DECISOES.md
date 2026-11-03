@@ -10,3 +10,6 @@ Formato: `[Data] Decisão: O que foi decidido — Por quê foi decidido`.
 - [2026-10-28] Injeção de `java.time.Clock` em todos os componentes temporais para garantir que os testes de agendamento e expiração sejam 100% determinísticos.
 - [2026-10-28] Ajuste em um único passo no `AssinaturaService.ajustarCotaGratuitaParaLoja` para otimizar updates e evitar chamadas redundantes ao repositório.
 - [2026-10-28] Separação entre saudação inicial e comando de ajuda no `ChatbotService` para que comandos `/ajuda` e opção `4` entreguem o texto instrutivo do marketplace.
+- [2026-11-03] Máquina de estados conversacional persistida em `conversas_whatsapp` com chave SHA-256 (LGPD) e timeout de 30 min para garantir resiliência e continuidade de sessões no WhatsApp.
+- [2026-11-03] Padrão Strategy para `ArmazenamentoFotos` (Local no disco para dev e Supabase REST API para prod) permitindo desenvolvimento offline sem credenciais em nuvem.
+- [2026-11-03] Suporte duplo de autenticação de webhook (`apikey` e `x-webhook-secret`) para total compatibilidade com diferentes versões e configurações da Evolution API.
