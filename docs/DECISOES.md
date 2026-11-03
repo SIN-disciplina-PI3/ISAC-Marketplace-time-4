@@ -13,3 +13,6 @@ Formato: `[Data] Decisão: O que foi decidido — Por quê foi decidido`.
 - [2026-11-03] Máquina de estados conversacional persistida em `conversas_whatsapp` com chave SHA-256 (LGPD) e timeout de 30 min para garantir resiliência e continuidade de sessões no WhatsApp.
 - [2026-11-03] Padrão Strategy para `ArmazenamentoFotos` (Local no disco para dev e Supabase REST API para prod) permitindo desenvolvimento offline sem credenciais em nuvem.
 - [2026-11-03] Suporte duplo de autenticação de webhook (`apikey` e `x-webhook-secret`) para total compatibilidade com diferentes versões e configurações da Evolution API.
+- [2026-11-03] Autenticação stateless via Spring Security com filtro JWT (`Bearer <token>`) e BCrypt para senhas — desacoplamento entre frontend, backend e futuras integrações.
+- [2026-11-03] RBAC com dois papéis explícitos (`ROLE_LOJA` e `ROLE_ADMIN`): lojas gerenciam estritamente seus próprios recursos e assinaturas via `/api/minha-loja` e `/api/anuncios/{id}`, enquanto administradores possuem controle centralizado no `/api/admin/**`.
+- [2026-11-03] Criação automática via `DataLoader` de credenciais padrão de desenvolvimento (`admin@isac.org.br` / `admin123` e `tapiocaria@isac-demo.local` / `loja123`) para viabilizar testes manuais e demonstração do sistema.

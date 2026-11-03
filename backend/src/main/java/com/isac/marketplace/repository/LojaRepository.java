@@ -20,4 +20,5 @@ public interface LojaRepository extends JpaRepository<Loja, Long> {
     List<Loja> findByPlano(PlanoLoja plano);
     List<Loja> findByPlanoAndStatusAssinatura(PlanoLoja plano, StatusAssinatura statusAssinatura);
     List<Loja> findByDataVencimentoAssinaturaBeforeAndStatusAssinatura(LocalDateTime data, StatusAssinatura statusAssinatura);
+    long countByStatusAssinatura(StatusAssinatura statusAssinatura);
 }

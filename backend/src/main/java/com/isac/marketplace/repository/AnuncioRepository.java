@@ -17,6 +17,12 @@ public interface AnuncioRepository extends JpaRepository<Anuncio, Long>, JpaSpec
 
     long countByLojaAndStatus(Loja loja, StatusAnuncio status);
 
+    long countByStatus(StatusAnuncio status);
+
+    List<Anuncio> findByStatusOrderByDataPublicacaoDesc(StatusAnuncio status);
+
+    List<Anuncio> findAllByOrderByDataPublicacaoDesc();
+
     List<Anuncio> findByLoja(Loja loja);
 
     List<Anuncio> findByLojaOrderByDataPublicacaoDesc(Loja loja);
