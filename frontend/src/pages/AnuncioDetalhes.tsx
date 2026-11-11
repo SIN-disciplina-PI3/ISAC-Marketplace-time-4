@@ -47,7 +47,8 @@ export const AnuncioDetalhes: React.FC = () => {
 
   const fotoFallback = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=700';
 
-  const formatarPreco = (preco: number) => {
+  const formatarPreco = (preco: number | null | undefined) => {
+    if (preco == null) return 'Preço a consultar';
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
@@ -94,7 +95,7 @@ export const AnuncioDetalhes: React.FC = () => {
                 <MapPin className="w-3 h-3 text-slate-400" /> {anuncio.bairro}
               </span>
               <span className="text-slate-400 flex items-center gap-1">
-                <Calendar className="w-3 h-3" /> Publicado em {new Date(anuncio.dataPublicacao).toLocaleDateString('pt-BR')}
+                <Calendar className="w-3 h-3" /> Publicado em {new Date(anuncio.dataPublicacao ?? '').toLocaleDateString('pt-BR')}
               </span>
             </div>
 

@@ -2,15 +2,15 @@
 
 Este documento registra o estado atual do desenvolvimento, o que foi concluído, o que está pendente e como executar o sistema em cada fase.
 
-## Status Geral: Fase 3 Concluída com Sucesso ✅
+## Status Geral: Fase 4 Concluída com Sucesso ✅
 
 | Fase | Descrição | Status | Detalhes |
 |---|---|---|---|
 | **Fase 1** | Núcleo do Back-end (Spring Boot, Domínio, Flyway, H2, Serviços, Chatbot básico, Testes) | ✅ Concluída | 88 testes unitários/integração verdes, build success, JaCoCo gerado, dados demo e simulador REST ativos |
 | **Fase 2** | WhatsApp Conversacional & Armazenamento (Máquina de estados, Evolution API, Fotos) | ✅ Concluída | 111 testes verdes, máquina de estados completa (`/anunciar`, `/buscar`, `/meusanuncios`, `/renovar`, `/pausar`, `/reativar`, `/cancelar`), Webhook Evolution API com validação de segredo, armazenamento local e Supabase Storage, doc Typebot |
 | **Fase 3** | Segurança & Área Logada (Spring Security, JWT, Admin e Loja) | ✅ Concluída | 144 testes verdes (0 falhas, 0 erros, 0 ignorados). Spring Security + JWT, Login, Minha Loja, Ações de Anúncio, Painel Admin completo (moderação, lojas, assinaturas, métricas, CRUD de categorias/eventos/conteúdos), testes 401/403 |
-| **Fase 4** | Front-end React (Vite, TS, Tailwind, Vitrine, Telas de Gestão, Vitest) | ⏳ Próxima | Interface SPA mobile-first e testes Vitest |
-| **Fase 5** | Importador de WhatsApp & Métricas Admin (Parser de chat .txt, Heurísticas, Revisão) | ⚪ Não iniciada | Processamento de exportação do grupo .txt |
+| **Fase 4** | Front-end React (Vite, TS, Tailwind, Vitrine, Telas de Gestão, Vitest) | ✅ Concluída | npm run build ✅ (1524 módulos), npm test ✅ (21 testes, 4 arquivos), SPA mobile-first completa |
+| **Fase 5** | Importador de WhatsApp & Métricas Admin (Parser de chat .txt, Heurísticas, Revisão) | ⏳ Próxima | Processamento de exportação do grupo .txt |
 | **Fase 6** | Entrega & Infraestrutura (Docker Compose, CI, JaCoCo, Documentação Final) | ⚪ Não iniciada | Docker Compose, GitHub Actions, documentação completa |
 
 ---
@@ -63,4 +63,80 @@ Este documento registra o estado atual do desenvolvimento, o que foi concluído,
 ```powershell
 cd backend
 .\mvn.cmd test
+```
+
+---
+
+## O que foi entregue na Fase 4
+
+### Front-end: SPA React mobile-first completa
+
+**Stack:** React 18, Vite 5, TypeScript strict, Tailwind CSS (paleta ISAC customizada), React Router v6, Vitest + Testing Library.
+
+**Páginas públicas (sem autenticação):**
+- `/` — `Home.tsx`: hero com buscador, grid de destaques, seção WhatsApp bot, lista de eventos
+- `/vitrine` — `Vitrine.tsx`: busca por termo/categoria/bairro com paginação via Spring Page
+- `/anuncios/:id` — `AnuncioDetalhes.tsx`: página de detalhes com galeria, preço, link WhatsApp
+- `/eventos` — `Eventos.tsx`: lista de próximos eventos da comunidade
+- `/institucional/:chave` — `Institucional.tsx`: conteúdo markdown por chave (sobre, missao, etc.)
+- `/como-anunciar` — `ComoAnunciar.tsx`: canais WhatsApp + site, tabela de planos
+- `/login` — `Login.tsx`: formulário com feedback de erro
+- `/cadastro-loja` — `CadastroLoja.tsx`: formulário de cadastro com CNPJ
+
+**Área da loja (autenticação LOJA ou ADMIN):**
+- `/loja` — `DashboardLoja.tsx`: resumo de assinatura e atalhos
+- `/loja/anuncios` — `MeusAnuncios.tsx`: CRUD completo com modal e upload de foto
+- `/loja/dados` — `DadosLoja.tsx`: formulário de edição dos dados cadastrais
+
+**Painel administrativo (autenticação ADMIN):**
+- `/admin` — `DashboardAdmin.tsx`: métricas e navegação rápida
+- `/admin/lojas` — `LojasAdmin.tsx`: tabela com confirmar pagamento / cancelar assinatura
+- `/admin/anuncios` — `AnunciosAdmin.tsx`: moderação com modal de rejeição (motivo obrigatório)
+- `/admin/categorias` — `CategoriasAdmin.tsx`: adicionar e ativar/inativar categorias
+- `/admin/eventos` — `EventosAdmin.tsx`: CRUD de eventos
+- `/admin/conteudos` — `ConteudosAdmin.tsx`: edição inline de conteúdos institucionais (Markdown)
+
+**Componentes reutilizáveis:**
+- `Navbar.tsx`, `Footer.tsx`, `CardAnuncio.tsx`, `LoadingSpinner.tsx`, `ProtectedRoute.tsx`
+
+**Autenticação:**
+- `AuthContext.tsx` com `AuthProvider` e hook `useAuth` — persiste token/papel/lojaId em `localStorage`
+- `ProtectedRoute` aceita `papeis[]` ou `papelRequerido` para controle de acesso por papel
+
+**Testes Vitest:**
+
+| Arquivo | Testes | Resultado |
+|---|---|---|
+| `CardAnuncio.test.tsx` | 9 | ✅ |
+| `Vitrine.test.tsx` | 4 | ✅ |
+| `Login.test.tsx` | 5 | ✅ |
+| `ProtectedRoute.test.tsx` | 3 | ✅ |
+| **Total** | **21** | **✅ PASSANDO** |
+
+**Build Vite:**
+```
+✓ 1524 modules transformed
+dist/assets/index.js  279 kB (gzip: 76 kB)
+dist/assets/index.css  34 kB (gzip: 6 kB)
+✓ built in 10.32s
+```
+
+---
+
+## Como Rodar o Front-end (desenvolvimento)
+
+```powershell
+cd frontend
+npm run dev
+# Acesse http://localhost:5173
+# (o proxy /api encaminha para http://localhost:8080)
+```
+
+## Como Rodar os Testes
+```powershell
+cd backend
+.\mvn.cmd test
+
+cd ..\frontend
+npm test
 ```

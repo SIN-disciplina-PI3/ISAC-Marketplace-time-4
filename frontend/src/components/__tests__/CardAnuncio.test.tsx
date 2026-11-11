@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
-import CardAnuncio from '../CardAnuncio';
+import { CardAnuncio } from '../CardAnuncio';
 import { Anuncio } from '../../types';
 
 const anuncioBase: Anuncio = {

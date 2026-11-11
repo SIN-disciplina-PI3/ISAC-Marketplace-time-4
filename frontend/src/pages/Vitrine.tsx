@@ -49,10 +49,10 @@ export const Vitrine: React.FC = () => {
     async function carregarAnuncios() {
       setLoading(true);
       try {
-        const res = await api.buscar(termoAtual, categoriaAtual, bairroAtual, paginaAtual) as any;
-        setAnuncios(res.content ?? res.anuncios ?? []);
-        setTotal(res.totalElements ?? res.total ?? 0);
-        setTotalPaginas(res.totalPages ?? res.totalPaginas ?? 0);
+        const res = await api.buscar({ termo: termoAtual, categoria: categoriaAtual, bairro: bairroAtual, pagina: paginaAtual });
+        setAnuncios(res.content ?? []);
+        setTotal(res.totalElements ?? 0);
+        setTotalPaginas(res.totalPages ?? 0);
       } catch (err) {
         console.error('Erro ao buscar anúncios:', err);
       } finally {

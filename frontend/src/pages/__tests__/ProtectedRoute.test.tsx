@@ -20,11 +20,15 @@ function PaginaLogin() {
 
 function renderComRota(papel: string | null) {
   vi.mocked(useAuth).mockReturnValue({
-    usuario: papel ? { email: 'user@test.com', papel } : null,
+    usuario: papel ? { email: 'user@test.com', papel } as any : null,
     login: vi.fn(),
     logout: vi.fn(),
+    loading: false,
     carregando: false,
-  } as ReturnType<typeof useAuth>);
+    isLoja: papel === 'LOJA',
+    isAdmin: papel === 'ADMIN',
+    isAuthenticated: !!papel,
+  } as any);
 
   return render(
     <MemoryRouter initialEntries={['/admin']}>

@@ -17,10 +17,10 @@ export const Home: React.FC = () => {
     async function carregarDados() {
       try {
         const [buscaRes, eventosRes] = await Promise.all([
-          api.buscar('', '', '', 0),
+          api.buscar({ pagina: 0 }),
           api.listarEventos(),
         ]);
-        setDestaques(buscaRes.anuncios.slice(0, 4));
+        setDestaques(buscaRes.content.slice(0, 4));
         setEventos(eventosRes.slice(0, 3));
       } catch (err) {
         console.error('Erro ao carregar dados da Home:', err);
@@ -197,7 +197,7 @@ export const Home: React.FC = () => {
               <div key={evento.id} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow transition">
                 <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700 mb-2">
                   <Calendar className="w-4 h-4" />
-                  {new Date(evento.dataInicio).toLocaleDateString('pt-BR')}
+                  {new Date(evento.dataHora ?? evento.dataInicio ?? '').toLocaleDateString('pt-BR')}
                 </div>
                 <h3 className="font-bold text-slate-900 text-base mb-2">{evento.titulo}</h3>
                 <p className="text-sm text-slate-600 line-clamp-3 mb-4">{evento.descricao}</p>

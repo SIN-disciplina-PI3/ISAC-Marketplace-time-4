@@ -39,7 +39,7 @@ export const Eventos: React.FC = () => {
             <div key={ev.id} className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
               <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">
                 <Calendar className="w-3.5 h-3.5" />
-                {new Date(ev.dataInicio).toLocaleDateString('pt-BR', {
+                {new Date(ev.dataHora ?? ev.dataInicio ?? '').toLocaleDateString('pt-BR', {
                   weekday: 'short',
                   day: 'numeric',
                   month: 'long',

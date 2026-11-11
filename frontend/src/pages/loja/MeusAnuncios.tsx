@@ -65,10 +65,10 @@ export const MeusAnuncios: React.FC = () => {
     setEditandoId(anuncio.id);
     setTitulo(anuncio.titulo);
     setDescricao(anuncio.descricao || '');
-    setPreco(String(anuncio.preco));
+    setPreco(anuncio.preco != null ? String(anuncio.preco) : '');
     setCategoriaId(anuncio.categoriaId);
     setBairro(anuncio.bairro);
-    setTipo(anuncio.tipo);
+    setTipo(anuncio.tipo ?? 'PRODUTO');
     setModalAberto(true);
   };
 
@@ -237,7 +237,7 @@ export const MeusAnuncios: React.FC = () => {
                     </td>
 
                     <td className="py-4 px-4 font-bold text-slate-800">
-                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(anuncio.preco)}
+                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(anuncio.preco ?? 0)}
                     </td>
 
                     <td className="py-4 px-4">

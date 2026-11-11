@@ -92,7 +92,7 @@ export const CardAnuncio: React.FC<CardAnuncioProps> = ({ anuncio }) => {
       {/* Ação WhatsApp */}
       <div className="p-4 pt-0">
         <a
-          href={anuncio.linkWaMe}
+          href={whatsappHref}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition active:scale-[0.98] text-sm"

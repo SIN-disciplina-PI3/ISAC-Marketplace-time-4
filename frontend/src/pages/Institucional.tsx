@@ -71,7 +71,7 @@ export const Institucional: React.FC = () => {
         </div>
 
         <div className="border-t border-slate-100 pt-6 text-xs text-slate-400">
-          Última atualização: {new Date(conteudo.atualizadoEm).toLocaleDateString('pt-BR')}
+          Última atualização: {new Date(conteudo.atualizadoEm ?? '').toLocaleDateString('pt-BR')}
         </div>
       </article>
     </div>
