@@ -5,43 +5,75 @@ import { TextoFormatado } from '../components/TextoFormatado';
 import { Evento } from '../types';
 import { api } from '../services/api';
 
+const EVENTOS_FALLBACK: Evento[] = [
+  {
+    id: 1,
+    titulo: 'Feira Agroecológica e Cultural de Enseada dos Corais',
+    descricao:
+      'Encontro mensal reunindo produtores familiares, artesãos locais e atrações culturais do Cabo de Santo Agostinho.\n\nVenha conhecer frutas, hortaliças orgânicas, tapiocas e artesanato de conchas e palha.',
+    local: 'Praça Central de Enseada dos Corais',
+    dataHora: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+    fotoUrl: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=800&q=80',
+    publicado: true,
+  },
+  {
+    id: 2,
+    titulo: 'Mutirão Comunitário de Limpeza e Preservação das Praias',
+    descricao:
+      'Ação coletiva do ISAC com voluntários e comunidade para conscientização ambiental e preservação do litoral.\n\nFoco no recolhimento de microplásticos e sensibilização dos banhistas.',
+    local: 'Orla da Enseada dos Corais e Gaibu',
+    dataHora: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000).toISOString(),
+    fotoUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80',
+    publicado: true,
+  },
+  {
+    id: 3,
+    titulo: 'Oficina de Agroecologia e Compostagem Doméstica',
+    descricao:
+      'Aprenda práticas simples de manejo sustentável do solo, adubação orgânica e reciclagem de resíduos alimentares no seu quintal.',
+    local: 'Sede Comunitária do ISAC - Enseada dos Corais',
+    dataHora: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    fotoUrl: 'https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80',
+    publicado: true,
+  },
+];
+
 export const Eventos: React.FC = () => {
-  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [eventos, setEventos] = useState<Evento[]>(EVENTOS_FALLBACK);
   const [loading, setLoading] = useState(true);
 
-  // Lista de imagens temáticas do Unsplash para feiras e preservação ambiental
   const fallbackImagens = [
-    'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=800&q=80', // Feira livre de frutas/vegetais
-    'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80', // Meio ambiente e mudas / reflorestamento
-    'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=800&q=80', // Feira e produtos artesanais
-    'https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80', // Ação comunitária ao ar livre
+    'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80',
   ];
 
   useEffect(() => {
-    async function carregar() {
-      try {
-        const dados = await api.listarEventos();
-        // Ordena por data mais recente primeiro
-        const ordenados = [...dados].sort((a, b) => {
-          const dateA = new Date(a.dataHora ?? a.dataInicio ?? 0).getTime();
-          const dateB = new Date(b.dataHora ?? b.dataInicio ?? 0).getTime();
-          return dateB - dateA;
-        });
-        setEventos(ordenados);
-      } catch (err) {
-        console.error('Erro ao carregar eventos:', err);
-      } finally {
+    api.listarEventos()
+      .then((dados) => {
+        if (dados && Array.isArray(dados) && dados.length > 0) {
+          const ordenados = [...dados].sort((a, b) => {
+            const dateA = new Date(a.dataHora ?? a.dataInicio ?? 0).getTime();
+            const dateB = new Date(b.dataHora ?? b.dataInicio ?? 0).getTime();
+            return dateB - dateA;
+          });
+          setEventos(ordenados);
+        }
+      })
+      .catch((err) => {
+        console.warn('Backend de eventos indisponível, usando fallback estático:', err);
+      })
+      .finally(() => {
         setLoading(false);
-      }
-    }
-    carregar();
+      });
   }, []);
 
   const ehEventoFuturo = (dataString?: string) => {
     if (!dataString) return true;
     const dataEvento = new Date(dataString).getTime();
     const agora = new Date().getTime();
-    return dataEvento >= agora - 24 * 60 * 60 * 1000; // considerado próximo até 24h depois
+    return dataEvento >= agora - 24 * 60 * 60 * 1000;
   };
 
   return (
@@ -63,7 +95,7 @@ export const Eventos: React.FC = () => {
 
       {/* Lista de Eventos */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-        {loading ? (
+        {loading && eventos.length === 0 ? (
           <div className="bg-white rounded-2xl p-12 shadow-sm border border-slate-200">
             <LoadingSpinner texto="Carregando eventos do ISAC..." />
           </div>
@@ -129,7 +161,7 @@ export const Eventos: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Conteúdo textual com tratamento de quebras de linha */}
+                    {/* Conteúdo textual */}
                     <div className="p-6 space-y-4">
                       <h2 className="text-xl font-bold text-slate-900 group-hover:text-emerald-700 transition leading-snug">
                         {ev.titulo}

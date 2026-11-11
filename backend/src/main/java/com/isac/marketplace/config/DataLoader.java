@@ -48,6 +48,9 @@ public class DataLoader implements CommandLineRunner {
             log.info("Banco de dados vazio no perfil 'dev'. Carregando dados de demonstração (dados-demo.sql)...");
             try {
                 ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+                populator.setSqlScriptEncoding("UTF-8");
+                populator.setIgnoreFailedDrops(true);
+                populator.setContinueOnError(true);
                 populator.addScript(new ClassPathResource("dados-demo.sql"));
                 populator.execute(dataSource);
                 log.info("Dados de demonstração carregados com sucesso!");

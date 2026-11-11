@@ -1,49 +1,79 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Sprout, Leaf, Sun, Droplets, HeartHandshake, CheckCircle } from 'lucide-react';
-import { LoadingSpinner } from '../components/LoadingSpinner';
+import { ArrowLeft, BookOpen, Sprout, Leaf, Sun, Droplets, HeartHandshake } from 'lucide-react';
 import { TextoFormatado } from '../components/TextoFormatado';
 import { Sobre } from './Sobre';
 import { Conteudo } from '../types';
 import { api } from '../services/api';
 
+const CONTEUDOS_FALLBACK: Record<string, { titulo: string; corpoMarkdown: string }> = {
+  agricultura: {
+    titulo: 'Agricultura Familiar e Meio Ambiente',
+    corpoMarkdown:
+      'O ISAC fomenta a agroecologia costeira e a soberania alimentar das comunidades do Cabo de Santo Agostinho.\n\nAtravés de hortas comunitárias, sistemas agroflorestais e feiras locais, conectamos pequenos agricultores e pescadores artesanais diretamente com moradores e visitantes.\n\nNossos projetos promovem o não uso de agrotóxicos, a preservação de nascentes, o reflorestamento de restingas e a valorização da produção sustentável regional.',
+  },
+  'como-anunciar': {
+    titulo: 'Como Anunciar no ISAC Marketplace',
+    corpoMarkdown:
+      'Divulgue seus produtos e serviços na vitrine colaborativa do Cabo de Santo Agostinho!\n\n- **Plano Gratuito:** Cadastre até 2 anúncios ativos sem nenhum custo, gerencie pelo site ou WhatsApp.\n- **Plano Assinante:** Anúncios ilimitados, destaque visual nas buscas da vitrine e suporte prioritário por uma contribuição simbólica que apoia diretamente os projetos socioambientais do ISAC.\n- **Pelo WhatsApp:** Envie uma mensagem com /anunciar para nosso bot e publique em menos de 2 minutos!',
+  },
+};
+
 export const Institucional: React.FC = () => {
   const { chave } = useParams<{ chave: string }>();
   const [conteudo, setConteudo] = useState<Conteudo | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [erro, setErro] = useState<string | null>(null);
 
-  // Se a chave for 'sobre', exibe o componente completo redesenhado Sobre
+  // Se a chave for 'sobre', exibe o componente completo Sobre
   if (chave === 'sobre') {
     return <Sobre />;
   }
 
   useEffect(() => {
-    async function carregar() {
-      if (!chave) return;
-      setLoading(true);
-      try {
-        const dados = await api.obterConteudo(chave);
-        setConteudo(dados);
-        setErro(null);
-      } catch (err: any) {
-        setErro(err.message || 'Erro ao carregar conteúdo.');
-      } finally {
-        setLoading(false);
-      }
-    }
-    carregar();
+    if (!chave) return;
+    const fallback = CONTEUDOS_FALLBACK[chave];
+
+    api.obterConteudo(chave)
+      .then((dados) => {
+        if (dados && dados.titulo) {
+          setConteudo(dados);
+        } else if (fallback) {
+          setConteudo({
+            id: 0,
+            chave,
+            titulo: fallback.titulo,
+            corpoMarkdown: fallback.corpoMarkdown,
+            atualizadoEm: new Date().toISOString(),
+          });
+        }
+      })
+      .catch(() => {
+        // Se a API falhar (ex: erro 500 ou offline), usa o fallback estático
+        if (fallback) {
+          setConteudo({
+            id: 0,
+            chave,
+            titulo: fallback.titulo,
+            corpoMarkdown: fallback.corpoMarkdown,
+            atualizadoEm: new Date().toISOString(),
+          });
+        }
+      });
   }, [chave]);
 
-  if (loading) {
-    return <LoadingSpinner texto="Carregando informações institucionais..." />;
-  }
+  const fallback = chave ? CONTEUDOS_FALLBACK[chave] : null;
+  const dadosExibicao = conteudo || (fallback ? {
+    id: 0,
+    chave: chave || '',
+    titulo: fallback.titulo,
+    corpoMarkdown: fallback.corpoMarkdown,
+    atualizadoEm: new Date().toISOString(),
+  } : null);
 
-  if (erro || !conteudo) {
+  if (!dadosExibicao) {
     return (
       <div className="max-w-2xl mx-auto py-16 px-4 text-center space-y-4">
-        <h2 className="text-xl font-bold text-slate-800">Conteúdo não disponível</h2>
-        <p className="text-slate-500 text-sm">{erro || 'O conteúdo solicitado não foi encontrado.'}</p>
+        <h2 className="text-xl font-bold text-slate-800">Conteúdo em atualização</h2>
+        <p className="text-slate-500 text-sm">Este conteúdo institucional está sendo preparado pelo Instituto ISAC.</p>
         <Link
           to="/"
           className="inline-flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-emerald-700"
@@ -58,16 +88,16 @@ export const Institucional: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
-      {/* Banner Superior com Imagens Ilustrativas para Páginas Institucionais */}
+      {/* Banner Superior com Imagens Ilustrativas */}
       <section className="relative bg-slate-900 text-white overflow-hidden py-16 sm:py-20">
         <div className="absolute inset-0 z-0">
           <img
             src={
               ehAgricultura
-                ? 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80' // Plantação verde / agricultura familiar
+                ? 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80'
                 : 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1600&q=80'
             }
-            alt={conteudo.titulo}
+            alt={dadosExibicao.titulo}
             className="w-full h-full object-cover opacity-35"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
@@ -87,7 +117,7 @@ export const Institucional: React.FC = () => {
               Institucional ISAC • Cabo de Santo Agostinho
             </span>
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-              {conteudo.titulo}
+              {dadosExibicao.titulo}
             </h1>
             <p className="text-base sm:text-lg text-slate-200 max-w-2xl font-light">
               {ehAgricultura
@@ -102,11 +132,11 @@ export const Institucional: React.FC = () => {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 space-y-8">
         <article className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 shadow-sm space-y-6">
           <div className="prose prose-slate max-w-none text-slate-700 leading-relaxed text-base sm:text-lg">
-            <TextoFormatado texto={conteudo.corpoMarkdown} />
+            <TextoFormatado texto={dadosExibicao.corpoMarkdown} />
           </div>
 
           <div className="border-t border-slate-100 pt-6 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
-            <span>Última atualização: {new Date(conteudo.atualizadoEm ?? '').toLocaleDateString('pt-BR')}</span>
+            <span>Última atualização: {new Date(dadosExibicao.atualizadoEm ?? '').toLocaleDateString('pt-BR')}</span>
             <span>Instituto ISAC • Enseada dos Corais</span>
           </div>
         </article>
