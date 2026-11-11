@@ -1,4 +1,4 @@
--- Índices para otimização de busca e integridade referencial
+-- Ãndices para otimizacao de busca e integridade referencial
 CREATE INDEX IF NOT EXISTS idx_anuncios_status_disp ON anuncios(status, disponivel);
 CREATE INDEX IF NOT EXISTS idx_anuncios_loja ON anuncios(loja_id);
 CREATE INDEX IF NOT EXISTS idx_anuncios_categoria ON anuncios(categoria_id);

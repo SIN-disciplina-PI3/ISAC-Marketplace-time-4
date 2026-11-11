@@ -99,6 +99,7 @@ export interface Evento {
   dataHora: string;
   dataInicio?: string;
   dataFim?: string;
+  fotoUrl?: string;
   linkInscricao?: string;
   publicado?: boolean;
 }

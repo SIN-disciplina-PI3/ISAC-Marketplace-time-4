@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Vitrine from './pages/Vitrine';
 import AnuncioDetalhes from './pages/AnuncioDetalhes';
 import Eventos from './pages/Eventos';
+import Sobre from './pages/Sobre';
 import Institucional from './pages/Institucional';
 import ComoAnunciar from './pages/ComoAnunciar';
 import Login from './pages/Login';
@@ -37,6 +38,8 @@ export default function App() {
               <Route path="/vitrine" element={<Vitrine />} />
               <Route path="/anuncios/:id" element={<AnuncioDetalhes />} />
               <Route path="/eventos" element={<Eventos />} />
+              <Route path="/sobre" element={<Sobre />} />
+              <Route path="/institucional/sobre" element={<Sobre />} />
               <Route path="/institucional/:chave" element={<Institucional />} />
               <Route path="/como-anunciar" element={<ComoAnunciar />} />
               <Route path="/login" element={<Login />} />

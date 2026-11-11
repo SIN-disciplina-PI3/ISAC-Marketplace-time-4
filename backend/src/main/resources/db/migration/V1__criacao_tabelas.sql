@@ -1,6 +1,6 @@
 -- ==========================================================
--- V1: Criação das tabelas do ISAC Marketplace
--- Compatível com PostgreSQL e H2 (modo PostgreSQL)
+-- V1: Criacao das tabelas do ISAC Marketplace
+-- Compativel com PostgreSQL e H2 (modo PostgreSQL)
 -- ==========================================================
 
 CREATE TABLE IF NOT EXISTS categorias (
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS buscas (
     canal VARCHAR(20) NOT NULL,
     resultados INT NOT NULL DEFAULT 0,
     telefone_hash VARCHAR(64),
-    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    Criacao_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS eventos (
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS importacoes (
     total_mensagens INT NOT NULL DEFAULT 0,
     total_candidatos INT NOT NULL DEFAULT 0,
     status VARCHAR(30) NOT NULL DEFAULT 'CONCLUIDO',
-    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    Criacao_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS anuncios_importados (
