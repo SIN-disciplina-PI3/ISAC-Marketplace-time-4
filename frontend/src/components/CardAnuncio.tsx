@@ -22,10 +22,11 @@ export const CardAnuncio: React.FC<CardAnuncioProps> = ({ anuncio }) => {
   const imagemPrincipal =
     anuncio.fotos?.[0] ?? anuncio.fotoUrl ?? fotoFallback;
 
-  // Suporta linkWaMe (legado) ou gera a partir do telefone
-  const whatsappHref =
-    anuncio.linkWaMe ??
-    `https://wa.me/${anuncio.telefoneWhatsapp ?? anuncio.telefoneLoja ?? ''}?text=${encodeURIComponent(`Olá! Tenho interesse no anúncio: ${anuncio.titulo}`)}`;
+  // Suporta linkWaMe (legado) ou gera a partir do telefone com mensagem dinâmica
+  const telLimpo = (anuncio.telefoneWhatsapp || anuncio.telefoneLoja || '').replace(/\D/g, '');
+  const telComDdi = telLimpo.startsWith('55') ? telLimpo : (telLimpo ? `55${telLimpo}` : '5581999990001');
+  const msgDinamica = encodeURIComponent(`Olá! Vi o anúncio "${anuncio.titulo}" no ISAC Marketplace e tenho interesse.`);
+  const whatsappHref = anuncio.linkWaMe || `https://wa.me/${telComDdi}?text=${msgDinamica}`;
 
   // nomeCategoria (legado) ou categoria (string)
   const nomeCategoria = anuncio.nomeCategoria ?? anuncio.categoria;
@@ -96,10 +97,10 @@ export const CardAnuncio: React.FC<CardAnuncioProps> = ({ anuncio }) => {
           target="_blank"
           rel="noopener noreferrer"
           className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-sm transition active:scale-[0.98] text-sm"
-          aria-label={`Falar no WhatsApp com o vendedor de ${anuncio.titulo}`}
+          aria-label={`Chamar no WhatsApp o vendedor de ${anuncio.titulo}`}
         >
           <MessageCircle className="w-4 h-4" />
-          Falar com Vendedor
+          Chamar no WhatsApp
         </a>
       </div>
     </article>

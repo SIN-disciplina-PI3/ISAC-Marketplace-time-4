@@ -88,7 +88,7 @@ public class ChatbotService {
         }
 
         // 3. Comandos de Meus Anúncios, Renovar e Pausar
-        if (textoMinusculo.equals("3") || textoMinusculo.equals("/meusanuncios") || textoMinusculo.equals("/meus anúncios")) {
+        if (textoMinusculo.equals("/meusanuncios") || textoMinusculo.equals("/meus anúncios") || textoMinusculo.equals("/meus-anuncios")) {
             return processarMeusAnuncios(telNormalizado);
         }
 
@@ -105,30 +105,42 @@ public class ChatbotService {
         }
 
         // 4. Iniciar fluxo guiado de anúncio
-        if (textoMinusculo.equals("2") || textoMinusculo.equals("/anunciar")) {
+        if (textoMinusculo.equals("/anunciar")) {
             return iniciarFluxoAnuncio(telNormalizado);
         }
 
         // 5. Saudação ou Menu
         if (SAUDACOES.contains(textoMinusculo)) {
-            return new MensagemChatbotResponse(mensagemMenu());
+            return new MensagemChatbotResponse(mensagemMenu(), List.of("https://wa.me/5581999990001"));
         }
 
-        // 6. Opção 1 ou comando /buscar
-        if (textoMinusculo.equals("1") || textoMinusculo.startsWith("/buscar")) {
+        // 6. Opção 1: Buscar produtos/serviços
+        if (textoMinusculo.equals("1") || textoMinusculo.startsWith("/buscar") || textoMinusculo.equals("buscar")) {
             String termoAposComando = extrairArgumentoComando(textoLimpo, "/buscar");
             if (!termoAposComando.isBlank()) {
                 return executarBusca(telNormalizado, termoAposComando);
             }
             return new MensagemChatbotResponse(
                     "🔍 *Como você deseja buscar?*\n\n" +
-                    "Digite o que você procura (ex: *tapioca*, *bolo de rolo*, *peixe*, *diarista*)."
+                    "Digite o nome do produto ou serviço que você procura (ex: *tapioca*, *bolo de rolo*, *peixe*, *eletricista*, *artesanato*).\n\n" +
+                    "💡 _Você também pode falar com a nossa equipe no WhatsApp:_ https://wa.me/5581999990001",
+                    List.of("https://wa.me/5581999990001")
             );
         }
 
-        // 7. Opção 4 ou Ajuda
+        // 7. Opção 2: Como anunciar no ISAC Marketplace
+        if (textoMinusculo.equals("2") || textoMinusculo.contains("como anunciar")) {
+            return mensagemComoAnunciar();
+        }
+
+        // 8. Opção 3: Sobre o Instituto ISAC
+        if (textoMinusculo.equals("3") || textoMinusculo.contains("sobre o isac") || textoMinusculo.equals("sobre")) {
+            return mensagemSobreISAC();
+        }
+
+        // 9. Opção 4 ou Ajuda / Meus anúncios
         if (textoMinusculo.equals("4") || textoMinusculo.equals("/ajuda") || textoMinusculo.equals("ajuda")) {
-            return new MensagemChatbotResponse(mensagemAjuda());
+            return new MensagemChatbotResponse(mensagemAjuda(), List.of("https://wa.me/5581999990001"));
         }
 
         // 8. Texto livre que não é comando = busca direta por produto/serviço
@@ -556,12 +568,51 @@ public class ChatbotService {
     private String mensagemMenu() {
         return "👋 *Olá! Bem-vindo ao Marketplace Comunitário do ISAC!*\n" +
                "Conectamos produtores, artesãos, comerciantes e moradores do Cabo de Santo Agostinho (Enseada dos Corais, Gaibu e região).\n\n" +
-               "Como posso ajudar hoje? Escolha uma opção ou digite o que procura:\n\n" +
-               "1️⃣ *Buscar* (produtos, serviços ou comércios)\n" +
-               "2️⃣ *Anunciar* (divulgue seu produto ou serviço)\n" +
-               "3️⃣ *Meus anúncios* (gerencie suas publicações)\n" +
-               "4️⃣ *Ajuda* (dúvidas e informações sobre o ISAC)\n\n" +
-               "💡 _Você também pode apenas digitar o que procura, ex: \"quero tapioca\" ou \"bolo de rolo\"!_";
+               "Como posso ajudar hoje? Escolha uma das opções abaixo digitando o número:\n\n" +
+               "1️⃣ *Buscar produtos/serviços* (ou digite o nome do item que procura)\n" +
+               "2️⃣ *Como anunciar no ISAC Marketplace* (passo a passo e planos)\n" +
+               "3️⃣ *Sobre o Instituto ISAC* (sede oficial, projetos e missão)\n\n" +
+               "💡 _Dicas rápidas:_\n" +
+               "• Envie */anunciar* para publicar um novo produto agora mesmo.\n" +
+               "• Envie */meusanuncios* para gerenciar suas publicações.\n" +
+               "• Ou apenas digite o que procura, ex: *\"tapioca\"* ou *\"bolo de rolo\"*!\n\n" +
+               "📲 *Fale com nossa equipe no WhatsApp:* https://wa.me/5581999990001";
+    }
+
+    private MensagemChatbotResponse mensagemComoAnunciar() {
+        return new MensagemChatbotResponse(
+                "📢 *Como Anunciar no ISAC Marketplace*\n\n" +
+                "Divulgar seus produtos ou serviços na nossa vitrine comunitária é simples e rápido:\n\n" +
+                "🌱 *Plano Comunitário Gratuito:*\n" +
+                "• Até 2 anúncios ativos simultaneamente sem nenhum custo.\n" +
+                "• Publicação no site e no WhatsApp com contato direto.\n" +
+                "• Renovação gratuita a cada 15 dias.\n\n" +
+                "⭐ *Plano Assinante Apoiador:*\n" +
+                "• Anúncios ilimitados e selo de Destaque nas buscas.\n" +
+                "• Indicação prioritária no WhatsApp bot e apoio aos projetos socioambientais.\n\n" +
+                "👉 *Para começar a cadastrar agora pelo WhatsApp:*\n" +
+                "Envie o comando */anunciar* e siga as perguntas guiadas.\n\n" +
+                "📲 *Ou fale com a coordenação:* https://wa.me/5581999990001?text=Ol%C3%A1!%20Gostaria%20de%20cadastrar%20o%20meu%20neg%C3%B3cio%20no%20ISAC%20Marketplace.",
+                List.of("https://wa.me/5581999990001?text=Ol%C3%A1!%20Gostaria%20de%20cadastrar%20o%20meu%20neg%C3%B3cio%20no%20ISAC%20Marketplace.")
+        );
+    }
+
+    private MensagemChatbotResponse mensagemSobreISAC() {
+        return new MensagemChatbotResponse(
+                "🌿 *Sobre o Instituto ISAC*\n\n" +
+                "O *Instituto de Sustentabilidade e Ação Comunitária (ISAC)* é uma organização socioambiental com sede no *Cabo de Santo Agostinho (PE)*, dedicada ao desenvolvimento sustentável da comunidade de *Enseada dos Corais*, Gaibu e região.\n\n" +
+                "🌱 *Nossos 4 Pilares de Atuação:*\n" +
+                "1. *Educação Ambiental:* Oficinas ecológicas e formação comunitária.\n" +
+                "2. *Reflorestamento da Mata Atlântica:* Preservação de restingas e nascentes.\n" +
+                "3. *Inclusão Social:* Fortalecimento da agricultura familiar e pesca artesanal.\n" +
+                "4. *Políticas Públicas:* Defesa dos direitos comunitários e sustentabilidade.\n\n" +
+                "📍 *Endereço Oficial:*\n" +
+                "Rua VT 2 (Av. das Sereias), 135 - Setor IV, Enseada dos Corais, Cabo de Santo Agostinho/PE.\n\n" +
+                "🌐 *Site Oficial:* https://www.isac-instituto.org.br/\n" +
+                "📲 *WhatsApp Oficial:* https://wa.me/5581999990001\n\n" +
+                "Envie *menu* para voltar ao início.",
+                List.of("https://www.isac-instituto.org.br/", "https://wa.me/5581999990001")
+        );
     }
 
     private String mensagemAjuda() {

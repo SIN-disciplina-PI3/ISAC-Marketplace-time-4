@@ -72,7 +72,7 @@ export const ComoAnunciar: React.FC = () => {
             </div>
 
             <a
-              href="https://wa.me/5581999990001?text=%2Fanunciar"
+              href="https://wa.me/5581999990001?text=Ol%C3%A1!%20Gostaria%20de%20cadastrar%20o%20meu%20neg%C3%B3cio%20no%20ISAC%20Marketplace."
               target="_blank"
               rel="noopener noreferrer"
               className="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition active:scale-95"

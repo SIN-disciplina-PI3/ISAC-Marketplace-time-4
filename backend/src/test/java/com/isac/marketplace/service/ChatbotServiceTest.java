@@ -73,9 +73,9 @@ class ChatbotServiceTest {
         MensagemChatbotResponse r2 = chatbotService.responderMensagem("81999990001", "menu");
 
         assertTrue(r1.resposta().contains("Marketplace Comunitário do ISAC"));
-        assertTrue(r1.resposta().contains("1️⃣ *Buscar*"));
-        assertTrue(r1.resposta().contains("2️⃣ *Anunciar*"));
-        assertTrue(r2.resposta().contains("4️⃣ *Ajuda*"));
+        assertTrue(r1.resposta().contains("1️⃣ *Buscar"));
+        assertTrue(r1.resposta().contains("2️⃣ *Como anunciar"));
+        assertTrue(r2.resposta().contains("3️⃣ *Sobre o Instituto ISAC"));
     }
 
     @Test

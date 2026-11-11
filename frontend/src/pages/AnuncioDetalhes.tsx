@@ -45,6 +45,12 @@ export const AnuncioDetalhes: React.FC = () => {
     );
   }
 
+  const telLimpo = (anuncio.telefoneWhatsapp || anuncio.telefoneLoja || '').replace(/\D/g, '');
+  const telComDdi = telLimpo.startsWith('55') ? telLimpo : (telLimpo ? `55${telLimpo}` : '5581999990001');
+  const msgProduto = encodeURIComponent(`Olá! Vi o anúncio "${anuncio.titulo}" no ISAC Marketplace e tenho interesse em comprar / tirar dúvidas.`);
+  const linkWhatsAppDinamico = `https://wa.me/${telComDdi}?text=${msgProduto}`;
+  const linkDuvidasISAC = `https://wa.me/5581999990001?text=${encodeURIComponent(`Olá! Gostaria de tirar dúvidas sobre o anúncio "${anuncio.titulo}" no ISAC Marketplace.`)}`;
+
   const fotoFallback = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=700';
 
   const formatarPreco = (preco: number | null | undefined) => {
@@ -131,15 +137,26 @@ export const AnuncioDetalhes: React.FC = () => {
           {/* Botão de contato direto */}
           <div className="space-y-3 pt-4">
             <a
-              href={anuncio.linkWaMe}
+              href={linkWhatsAppDinamico}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-xl shadow transition active:scale-[0.98] text-base"
+              className="w-full inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md transition active:scale-[0.98] text-base"
             >
               <MessageCircle className="w-5 h-5" />
-              Falar com o Vendedor no WhatsApp
+              Chamar no WhatsApp
             </a>
-            <p className="text-center text-xs text-slate-400 flex items-center justify-center gap-1">
+
+            <a
+              href={linkDuvidasISAC}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full inline-flex items-center justify-center gap-2 text-xs font-semibold text-slate-600 hover:text-emerald-700 bg-slate-100 hover:bg-slate-200 py-2.5 px-4 rounded-xl transition"
+            >
+              <MessageCircle className="w-4 h-4 text-emerald-600" />
+              Dúvidas no WhatsApp
+            </a>
+
+            <p className="text-center text-xs text-slate-400 flex items-center justify-center gap-1 pt-1">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
               Apoie o produtor local de Enseada dos Corais
             </p>
